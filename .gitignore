@@ -1,0 +1,19 @@
+# Python venv
+.venv/
+venv/
+env/
+
+# Bytecode
+__pycache__/
+*.pyc
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
+
+# IDE stuff
+.vscode/
+.idea/
