@@ -1,12 +1,14 @@
 # api/app.py
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from datetime import datetime, timezone
 
+
 app = FastAPI(title="Anomaly Guardian - Ingestion API", version="0.1")
+
 
 # --- Simple Pydantic model for incoming events ---
 class Event(BaseModel):
@@ -15,6 +17,7 @@ class Event(BaseModel):
     event_type: str
     response_time_ms: int
     ip: str
+
 
 # --- SimpleEncoder (same logic as detector) ---
 class SimpleEncoder:
@@ -50,23 +53,29 @@ class SimpleEncoder:
 
         return [user_id, event_id, last_octet, resp]
 
+
 # --- Build a tiny in-memory model on startup ---
 encoder = SimpleEncoder()
+
+
 def build_training_and_model():
     import random
+
     rows = []
     for _ in range(1000):
         user = f"user_{random.randint(1,20)}"
         event_type = random.choice(["login_success", "api_access", "password_change"])
         ip = f"192.168.1.{random.randint(1,240)}"
-        response_time = random.randint(50,400)
+        response_time = random.randint(50, 400)
         rows.append({"user": user, "event_type": event_type, "ip": ip, "response_time_ms": response_time})
     X = np.array([encoder.encode(r) for r in rows], dtype=float)
     m = IsolationForest(n_estimators=100, contamination=0.02, random_state=42)
     m.fit(X)
     return m
 
+
 model = build_training_and_model()
+
 
 def annotate_event(event: dict):
     x = np.array(encoder.encode(event), dtype=float).reshape(1, -1)
@@ -74,7 +83,7 @@ def annotate_event(event: dict):
     pred = model.predict(x)[0]
     try:
         raw_score = float(score)
-    except:
+    except Exception:
         raw_score = float(np.asarray(score).item())
     anomaly_score = (raw_score - (-0.5)) / (0.5 - (-0.5))
     anomaly_score = max(0.0, min(1.0, float(anomaly_score)))
@@ -87,10 +96,18 @@ def annotate_event(event: dict):
         out["timestamp"] = datetime.now(timezone.utc).isoformat()
     return out
 
+
 # --- API routes ---
 @app.get("/")
 def root():
     return {"status": "ok", "desc": "Anomaly Guardian Ingestion API"}
+
+
+@app.head("/")
+def health_head():
+    # Respond to HEAD probes with 200 OK (no body)
+    return Response(status_code=200)
+
 
 @app.post("/ingest")
 def ingest(event: Event):
@@ -100,6 +117,7 @@ def ingest(event: Event):
         return {"success": True, "annotated_event": annotated}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 # run locally with: uvicorn api.app:app --reload --port 8000
 if __name__ == "__main__":
