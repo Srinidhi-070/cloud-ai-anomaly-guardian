@@ -62,14 +62,14 @@ def build_training_and_model():
     import random
 
     rows = []
-    for _ in range(1000):
+    for _ in range(500):  # Reduced from 1000 to 500 for faster startup
         user = f"user_{random.randint(1,20)}"
         event_type = random.choice(["login_success", "api_access", "password_change"])
         ip = f"192.168.1.{random.randint(1,240)}"
         response_time = random.randint(50, 400)
         rows.append({"user": user, "event_type": event_type, "ip": ip, "response_time_ms": response_time})
     X = np.array([encoder.encode(r) for r in rows], dtype=float)
-    m = IsolationForest(n_estimators=100, contamination=0.02, random_state=42)
+    m = IsolationForest(n_estimators=50, contamination=0.02, random_state=42)  # Reduced estimators
     m.fit(X)
     return m
 

@@ -43,7 +43,7 @@ class SimpleEncoder:
         return [user_id, event_id, last_octet, resp]
 
 
-def build_initial_training_data(n=500):
+def build_initial_training_data(n=300):
     """Create a synthetic 'normal' dataset for training the IsolationForest."""
     import random
     rows = []
@@ -93,7 +93,7 @@ def main():
     train_rows = build_initial_training_data(1000)
     X_train = np.array([encoder.encode(r) for r in train_rows], dtype=float)
 
-    model = IsolationForest(n_estimators=100, contamination=0.02, random_state=42)
+    model = IsolationForest(n_estimators=50, contamination=0.02, random_state=42)
     model.fit(X_train)
     print(
         "Model trained on synthetic normal data. Waiting for incoming events on stdin...",
