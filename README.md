@@ -124,29 +124,34 @@ streamlit run dashboard/optimized_app.py
 
 ## 📊 Architecture
 
+```mermaid
 flowchart TB
+    %% Main flow
     A[🌐 Client Applications] --> B[🚀 FastAPI Server]
     B --> C[🤖 ML Model Engine]
     C --> D[📊 Anomaly Detection Module]
     D --> E[📈 Visualization Dashboard]
 
+    %% Extra components
     F[📡 Data Simulator] --> B
     G[🔍 Real-time Monitor] --> E
 
-    %% Better styling for visibility
-    classDef client fill:#dff2ff,stroke:#7ab8e1,stroke-width:1px,color:#003f5c;
-    classDef api fill:#f5e6ff,stroke:#b38cd9,stroke-width:1px,color:#432d57;
-    classDef ml fill:#fff1d6,stroke:#e8b567,stroke-width:1px,color:#664400;
-    classDef anomaly fill:#ffe1e1,stroke:#ff8a8a,stroke-width:1px,color:#661111;
-    classDef dashboard fill:#e3ffe3,stroke:#7cd67c,stroke-width:1px,color:#144d14;
-    classDef misc fill:#f0f0f0,stroke:#999,stroke-width:1px,color:#333;
+    %% Styling
+    classDef client fill:#d9ecff,stroke:#6ab6ff,stroke-width:1px,color:#003355
+    classDef api fill:#f1e6ff,stroke:#c39bff,stroke-width:1px,color:#3b2160
+    classDef ml fill:#fff2d6,stroke:#ffcb6b,stroke-width:1px,color:#4a3500
+    classDef anomaly fill:#ffe0e0,stroke:#ff9b9b,stroke-width:1px,color:#661616
+    classDef dashboard fill:#e3ffe8,stroke:#8bd899,stroke-width:1px,color:#1d4d22
+    classDef helper fill:#f2f2f2,stroke:#b3b3b3,stroke-width:1px,color:#333333
 
-    class A client;
-    class B api;
-    class C ml;
-    class D anomaly;
-    class E dashboard;
-    class F,G misc;
+    %% Assign classes
+    class A client
+    class B api
+    class C ml
+    class D anomaly
+    class E dashboard
+    class F,G helper
+```
 
 ### 🏗️ Components
 
