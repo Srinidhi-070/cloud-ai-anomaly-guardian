@@ -125,6 +125,7 @@ streamlit run dashboard/optimized_app.py
 ## 📊 Architecture
 
 ```mermaid
+
 flowchart TB
     %% Main flow
     A[🌐 Client Applications] --> B[🚀 FastAPI Server]
@@ -151,6 +152,7 @@ flowchart TB
     class D anomaly
     class E dashboard
     class F,G helper
+
 ```
 
 ### 🏗️ Components
