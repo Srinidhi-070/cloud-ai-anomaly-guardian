@@ -124,9 +124,6 @@ streamlit run dashboard/optimized_app.py
 
 ## 📊 Architecture
 
-<div align="center">
-
-```mermaid
 graph TB
     A[🌐 Client Applications] --> B[🚀 FastAPI Server]
     B --> C[🤖 ML Model Engine]
@@ -141,9 +138,6 @@ graph TB
     style C fill:#fff3e0
     style D fill:#ffebee
     style E fill:#e8f5e8
-```
-
-</div>
 
 ### 🏗️ Components
 
